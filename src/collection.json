@@ -1,0 +1,15 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "rdf-entity": {
+      "description": "Create RDF Entities from a SHACL Shape Graph",
+      "factory": "./rdf-entity/index#rdfEntity",
+      "schema": "./rdf-entity/schema.json"
+    },
+    "create-rdf-entity": {
+      "description": "Create and RDF Entity",
+      "factory": "./create-rdf-entity/index#createRdfEntity",
+      "schema": "./create-rdf-entity/schema.json"
+    }
+  }
+}

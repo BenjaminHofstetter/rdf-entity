@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "RrdEntitySchematics",
+    "title": "RDF Entity Schema",
+    "type": "object",
+    "description": "Says hello to someone",
+    "properties": {
+        "path": {
+            "type": "string",
+            "description": "Path to the SHACL Shape graph",
+            "$default": {
+                "$source": "argv",
+                "index": 0
+            },
+            "x-prompt": "Shape graph path (Turtle):"
+        },
+        "name": {
+            "type": "string",
+            "description": "The Graph Name"
+        }
+    },
+    "required": [
+        "path",
+        "name"
+    ]
+}

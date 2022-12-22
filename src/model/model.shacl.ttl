@@ -1,0 +1,113 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ent: <https://entity.conceptspace.ch/> .
+
+ent: rdfs:label "Entities"@en ;
+	rdfs:comment "This graph describes the RDF Entity framework"@en ;
+	sh:declare [
+		sh:prefix "sh" ;
+		sh:namespace "http://www.w3.org/ns/shacl#" ;
+	], [
+		sh:prefix "xsd" ;
+		sh:namespace "http://www.w3.org/2001/XMLSchema#" ;
+	], [
+		sh:prefix "ent" ;
+		sh:namespace "https://entity.conceptspace.ch/" ;
+	],
+	[
+		sh:prefix "rdf" ;
+		sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#" ;
+	],
+	[
+		sh:prefix "rdfs" ;
+		sh:namespace "http://www.w3.org/2000/01/rdf-schema#" ;
+	] ;
+	sh:suggestedShapesGraph ent: .
+
+ent:EntityShape a sh:NodeShape ;
+	sh:targetClass sh:NodeShape ;
+	rdfs:label "Entity" ;
+	rdfs:comment "RDF Entity Framework Entity Shape" ;
+	sh:property [
+		sh:name "name" ;
+		sh:description "Name of this Entity";
+		sh:path rdfs:label ;
+		sh:datatype xsd:string ;
+		sh:minCount 1;
+		sh:maxCount 1;
+	], [
+		sh:name "comment" ;
+		sh:description "Comment for this Entity";
+		sh:path rdfs:comment ;
+		sh:datatype xsd:string ;
+		sh:minCount 1;
+		sh:maxCount 1;
+	],
+	[
+		sh:name "property" ;
+		sh:description "Propertiy for this Entity Shape";
+		sh:path sh:property ;
+		sh:node ent:PropertyShape ;
+		sh:minCount 1;
+	]
+.
+
+ent:PropertyShape a sh:NodeShape ;
+	sh:targetClass sh:PropertyShape ;
+	rdfs:label "PropertyShape";
+	rdfs:comment "A Entity Framework Property Shape";
+	sh:property [
+		sh:path sh:name ;
+		sh:name "name" ;
+		sh:datatype xsd:string ;
+		sh:minCount 1 ;
+		sh:maxCount 1 ;
+	], [
+		sh:path sh:description ;
+		sh:name "description" ;
+		sh:datatype xsd:string ;
+		sh:minCount 1 ;
+		sh:maxCount 1 ;
+	], [
+		sh:path sh:path ;
+		sh:name "path" ;
+		sh:nodeKind sh:BlankNodeOrIRI ;
+		sh:minCount 1 ; 
+		sh:maxCount 1;
+	], [
+		sh:path sh:datatype ;
+		sh:name "datatype" ;
+		sh:nodeKind sh:IRI ;
+		sh:minCount 0 ; 
+		sh:maxCount 1;
+	], [
+		sh:path sh:node ;
+		sh:name "entity" ;
+		sh:node ent:EntityShape ;
+		sh:minCount 0 ; 
+		sh:maxCount 1;
+	],
+	 [
+		sh:path (sh:node rdf:label) ;
+		sh:name "entityName" ;
+		sh:node ent:EntityShape ;
+		sh:minCount 0 ; 
+		sh:maxCount 1;
+	],
+	[
+		sh:path sh:minCount ;
+		sh:name "minCardinality" ;
+		sh:minCount 0 ; 
+		sh:maxCount 1;
+		sh:datatype xsd:int;
+	],
+	[
+		sh:path sh:maxCount ;
+		sh:name "maxCardinality" ;
+		sh:minCount 0 ; 
+		sh:maxCount 1;
+		sh:datatype xsd:int;
+	]
+.

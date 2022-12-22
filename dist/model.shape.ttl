@@ -1,0 +1,188 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix flux: <https://flux.described.at/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fluxMatadataShapes: <https://ld.flux.zazuko.com/shapes/metadata/> .
+@prefix ent: <https://entity.conceptspace.ch/> .
+
+fluxMatadataShapes:
+    rdfs:label "Entity Shape Graph for Flux Class MetadataShapes"@en ;
+	rdfs:comment "This shapes graph can be used to create and validate RDF Entities."@en ;
+	sh:declare [
+		sh:prefix "fluxMatadataShapes" ;
+		sh:namespace "https://ld.flux.zazuko.com/shapes/metadata/"
+	],
+    [
+		sh:prefix "sh" ;
+		sh:namespace "http://www.w3.org/ns/shacl#"
+	],
+    [
+		sh:prefix "flux" ;
+		sh:namespace "https://flux.described.at/" ;
+	],
+    [
+		sh:prefix "rdfs" ;
+		sh:namespace "http://www.w3.org/2000/01/rdf-schema#"
+	],
+    [
+		sh:prefix "rdf" ;
+		sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	],
+    [
+        sh:prefix "xsd" ;
+        sh:namespace "http://www.w3.org/2001/XMLSchema#" 
+    ]
+ .
+
+fluxMatadataShapes:ClassMatadataShape
+    a sh:NodeShape, rdfs:Class ;
+    rdfs:label "ClassMatadataShape" ;
+    rdfs:comment "Shacl Shape to identify flux class shapes" ; 
+    sh:targetClass fluxMatadataShapes:ClassMatadataShape;
+    sh:property fluxMatadataShapes:TargetNodeProperty, fluxMatadataShapes:IconProperty, fluxMatadataShapes:LinkProperty, fluxMatadataShapes:ColorIndexProperty , fluxMatadataShapes:SearchPriorityProperty, fluxMatadataShapes:LabelPathProperty, fluxMatadataShapes:CommentPathProperty
+    .
+
+fluxMatadataShapes:TargetNodeProperty
+    a sh:PropertyShape ;
+    sh:path sh:node;
+    sh:name "targetNode" ;
+    sh:description "The node target of this shape" ;
+    sh:class rdfs:Class ;
+    sh:nodeKind sh:IRI;
+    sh:maxCount 1 ;
+    sh:minCount 1 ;
+    sh:message "invalid sh:targetNode property" .
+
+fluxMatadataShapes:IconProperty
+    a sh:PropertyShape ;
+    sh:path flux:faIcon ;
+    sh:name "icon" ;
+    sh:description "The icon of the type." ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+    sh:minCount 1 ;
+    sh:message "Invalid icon Property" .
+
+fluxMatadataShapes:LinkProperty
+    a sh:PropertyShape ;
+    sh:path flux:link ;
+    sh:name "link" ;
+    sh:description "Flux links aka flux:Link" ;
+    sh:node fluxMatadataShapes:FluxLinkShape;
+    sh:minCount 0 ;
+    sh:message "Invalid flux Link" .
+
+fluxMatadataShapes:ColorIndexProperty
+    a sh:PropertyShape ;
+    sh:path flux:colorIndex ;
+    sh:name "colorIndex" ;
+    sh:description "Color index for this class" ;
+    sh:datatype xsd:integer ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:minInclusive 0 ;
+    sh:maxInclusive 8 ;
+    sh:message "Invalid colorIndex" .
+
+fluxMatadataShapes:SearchPriorityProperty
+    a sh:PropertyShape ;
+    sh:path flux:searchPrio ;
+    sh:name "searchPriority" ;
+    sh:description "Search priority is a multiplicator for the search score" ;
+    sh:datatype xsd:integer ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:minInclusive 0 ;
+    sh:maxInclusive 50 ;
+    sh:message "Invalid search prority" .
+
+fluxMatadataShapes:LabelPathProperty
+    a sh:PropertyShape ;
+    sh:path flux:labelPath ;
+    sh:name "labelPredicate" ;
+    sh:description "The label of this class" ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message: "Invalid Label path" .
+
+fluxMatadataShapes:CommentPathProperty
+    a sh:PropertyShape ;
+    sh:path flux:commentPath ;
+    sh:name "commentPredicate" ;
+    sh:description "The comment of this class" ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message: "Invalid Comment path" .
+
+#
+# Flux Type Shape
+
+fluxMatadataShapes:FluxTypeShape
+    a sh:NodeShape ;
+    rdfs:label "FluxType" ;
+    rdfs:comment "This matches classes that are displayed in flux" ; 
+	sh:targetClass rdfs:Class;
+    sh:property fluxMatadataShapes:FluxClassMetatdataProperty, fluxMatadataShapes:LabelProperty, fluxMatadataShapes:CommentProperty
+.
+
+fluxMatadataShapes:FluxClassMetatdataProperty
+	a sh:PropertyShape ;
+ 	sh:path [sh:inversePath sh:target];
+   	sh:name "target" ;
+	sh:description "The target of this shape" ;
+ 	sh:class fluxMatadataShapes:ClassShape;
+   	sh:maxCount 1 ;
+   	sh:minCount 1 ;
+  	sh:message "Target problem" .
+
+fluxMatadataShapes:LabelProperty
+    a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:name "label" ;
+    sh:description "the class label" ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "Invalid label" .
+
+fluxMatadataShapes:CommentProperty
+    a sh:PropertyShape ;
+    sh:path rdfs:comment ;
+    sh:name "comment" ;
+    sh:description "the class comment" ;
+    sh:datatype xsd:string ;
+    sh:minCount 0 ;
+    sh:maxCount 1 ;
+    sh:message "Invalid comment" 
+.
+#
+# fluxMatadataShapes:FluxLinkShape
+fluxMatadataShapes:FluxLinkShape a sh:NodeShape ;
+    rdfs:label "FluxLink";
+    rdfs:comment "A descrition of a Link in Flux";
+    sh:class sh:PropertyShape ;
+    sh:property [
+        sh:path rdfs:label;
+        sh:name "linkLabel";
+        sh:minCount 1 ;
+        sh:maxCount 1 ; 
+        sh:datatype xsd:string;
+        sh:message: "invlaid link label";
+    ],
+    [
+        sh:path sh:path;
+        sh:name "path";
+        sh:minCount 1;
+        sh:maxCount 1;
+        ent:isPath:  true;
+        sh:message: "invalid path"
+    ],
+    [
+        sh:path sh:class;
+        sh:name "class";
+        sh:minCount 1;
+        sh:maxCount 1;
+        sh:message: "invalid class propery"
+    ]
+.
