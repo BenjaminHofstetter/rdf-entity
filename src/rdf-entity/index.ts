@@ -155,7 +155,7 @@ function _createGetter(propertyShape: PropertyShape) {
 \t\tif (nodes.value) {
 \t\t\treturn new ${propertyShape.returnJsType}(n, this._dataGraph);
 \t\t}
-\t\t${propertyShape.canBeUndefined ? 'return undefined' : `throw \`Invalid data: ${propertyShape.entityName}.${propertyShape.name} is undefined}\``};
+\t\t${propertyShape.canBeUndefined ? 'return undefined' : `throw \`Invalid data: ${propertyShape.entityName}.${propertyShape.name} is undefined\``};
 \t}`;
     }
     return `${tsDoc}\tpublic get ${propertyShape.name}() : ${propertyShape.returnJsType}${propertyShape.canBeUndefined ? ' | undefined' : '' } {
@@ -164,7 +164,7 @@ function _createGetter(propertyShape: PropertyShape) {
 \t\t\tconst literal = fromRdf($rdf.literal(node.value, $rdf.namedNode('${propertyShape.datatype}')));
 \t\t\treturn literal as ${propertyShape.returnJsType};
 \t\t}
-\t\t${propertyShape.canBeUndefined ? 'return undefined' : `throw \`Invalid data: ${propertyShape.entityName}.${propertyShape.name} is undefined}\``};
+\t\t${propertyShape.canBeUndefined ? 'return undefined' : `throw \`Invalid data: ${propertyShape.entityName}.${propertyShape.name} is undefined\``};
 \t}`;
   }
 }
