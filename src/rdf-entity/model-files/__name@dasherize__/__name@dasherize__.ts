@@ -5,6 +5,7 @@ import clownface, { GraphPointer, MultiPointer } from 'clownface';
 import { findNodes } from 'clownface-shacl-path';
 
 import graphQuads from './<%= dasherize(name) %>-graph';
+import { BlankNode } from 'n3';
 
 export class <%= classify(name) %> {
     private _dataset = new DatasetExt();
@@ -44,7 +45,13 @@ export class <%= classify(name) %>Entity {
         this._shapeGraph = <%= classify(name) %>.instance.dataset;
         this._shapeNode = shapeNode;
         this._shapePointer = clownface({ dataset: this._shapeGraph }).node(this._shapeNode);
+    }
 
+    public get rdfIdentifier(): NamedNode | BlankNode {
+        if(this._dataPointer.term.termType === 'BlankNode') {
+            return $rdf.blankNode(this._dataPointer.value)
+        }
+        return $rdf.namedNode(this._dataPointer.value)
     }
     
     protected _getPropertyValueByName(name: string): MultiPointer {
