@@ -5,7 +5,6 @@ import clownface, { GraphPointer, MultiPointer } from 'clownface';
 import { findNodes } from 'clownface-shacl-path';
 
 import graphQuads from './<%= dasherize(name) %>-graph';
-import { BlankNode } from 'n3';
 
 export class <%= classify(name) %> {
     private _dataset = new DatasetExt();
