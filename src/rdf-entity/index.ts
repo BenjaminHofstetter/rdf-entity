@@ -71,7 +71,7 @@ export function rdfEntity(options: RrdEntitySchematics): Rule {
           path,
           description,
           datatype,
-          entityName: entity,
+          entityName,
           returnJsType,
           returnsArray: cardinalityMax < 1 ? true : false,
           canBeUndefined: cardinalityMin < 1 ? true : false,
@@ -150,18 +150,21 @@ function _createGetter(propertyShape: PropertyShape) {
 \t}`;
   } else {
     if (propertyShape.returnsEntity) {
-      return `${tsDoc}\tpublic get ${propertyShape.name}() : ${propertyShape.returnJsType} {
+      return `${tsDoc}\tpublic get ${propertyShape.name}() : ${propertyShape.returnJsType}${propertyShape.canBeUndefined ? ' | undefined' : '' } {
 \t\tconst nodes = this._getPropertyValueByName('${propertyShape.name}');
-\t\treturn nodes?.pop()?.value as unknown as string;
+\t\tif (nodes.value) {
+\t\t\treturn new ${propertyShape.returnJsType}(n, this._dataGraph);
+\t\t}
+\t\t${propertyShape.canBeUndefined ? 'return undefined' : `throw \`Invalid data: ${propertyShape.entityName}.${propertyShape.name} is undefined}\``};
 \t}`;
     }
-    return `${tsDoc}\tpublic get ${propertyShape.name}() : ${propertyShape.returnJsType} {
+    return `${tsDoc}\tpublic get ${propertyShape.name}() : ${propertyShape.returnJsType}${propertyShape.canBeUndefined ? ' | undefined' : '' } {
 \t\tconst node = this._getPropertyValueByName('${propertyShape.name}');
 \t\tif(node.value) {
 \t\t\tconst literal = fromRdf($rdf.literal(node.value, $rdf.namedNode('${propertyShape.datatype}')));
 \t\t\treturn literal as ${propertyShape.returnJsType};
 \t\t}
-\t\tthrow \`Invalid data: entity.${propertyShape.name} is undefined}\`;
+\t\t${propertyShape.canBeUndefined ? 'return undefined' : `throw \`Invalid data: ${propertyShape.entityName}.${propertyShape.name} is undefined}\``};
 \t}`;
   }
 }
